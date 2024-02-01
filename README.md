@@ -1,73 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Room Booking App
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This is a simple room booking application that allows users to book rooms without the need for registration. Rooms are treated as independent entities, and the application stores reservations along with user information in a database. The focus is on providing a hassle-free booking experience without payment integration.
 
-## Description
+## Requirements
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1. User Flow
 
-## Installation
+- Users can book rooms without the need for registration.
+- User information, including Full Name, email, and phoneNumber, is required for making reservations.
 
-```bash
-$ npm install
-```
+### 2. Room Independence
 
-## Running the app
+- Rooms are treated as independent entities, not grouped within hotels or other complexes.
+- Each room is unique based on its Name and address.
 
-```bash
-# development
-$ npm run start
+### 3. Room Details
 
-# watch mode
-$ npm run start:dev
+- Rooms have the following details:
+  - Name
+  - Address
+  - Number of rooms
+  - Price per day in USD
 
-# production mode
-$ npm run start:prod
-```
+### 4. Booking Process
 
-## Test
+- Reservations are stored in the database.
+- Duplicate reservations with the same email are considered as bookings made by the same user.
 
-```bash
-# unit tests
-$ npm run test
+### 5. Payment
 
-# e2e tests
-$ npm run test:e2e
+- The application does not handle payments.
+- Users are expected to settle payments upon arrival at the location.
 
-# test coverage
-$ npm run test:cov
-```
+## Getting Started
 
-## Support
+### Prerequisites
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Node.js
+- PostgreSQL
 
-## Stay in touch
+### Installation
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/your-username/room-booking-app.git
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    cd room-booking-app
+    npm install
+    ```
+
+3. Set up the database:
+
+    - Create a PostgreSQL database with the name `room_booking_app`.
+    - Update the database connection details in the `src/database/database.module.ts` file.
+
+4. Run the application:
+
+    ```bash
+    npm start
+    ```
+
+## API Documentation
+
+- The API endpoints are documented using Swagger.
+- Access the Swagger documentation by navigating to `http://localhost:3000/api-docs` after starting the application.
+
+## Contributing
+
+If you would like to contribute to the development of this application, please follow the [contribution guidelines](CONTRIBUTING.md).
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
+
