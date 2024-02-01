@@ -16,7 +16,7 @@ export class RoomService {
     return await this.roomRepository.save(newRoom);
   }
 
-  async getRoomById(roomId: number): Promise<RoomEntity | undefined> {
+  async getRoomById(roomId: string): Promise<RoomEntity | undefined> {
       return await this.roomRepository.findOneOrFail({
         where: { id: roomId },
         relations: ['reservations'],

@@ -26,7 +26,7 @@ export class RoomController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get room by ID' })
-  async getRoomById(@Param('id') roomId: number): Promise<RoomEntity | undefined> {
+  async getRoomById(@Param('id') roomId: string): Promise<RoomEntity | undefined> {
     return await this.roomService.getRoomById(roomId);
   }
 }

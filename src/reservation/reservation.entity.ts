@@ -1,13 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../user/user.entity';
 import { RoomEntity } from '../room/room.entity';
 
 @Entity('reservations')
 export class ReservationEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
-  id: number;
+  id: string;
 
   @Column({ default: 'booked' })
   @ApiProperty()

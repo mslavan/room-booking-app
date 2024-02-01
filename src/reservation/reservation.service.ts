@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReservationEntity } from './reservation.entity';
@@ -39,9 +39,22 @@ export class ReservationService {
     return await this.reservationRepository.save(newReservation);
   }
 
-  async getReservationById(reservationId: number): Promise<ReservationEntity | undefined> {
-    return await this.reservationRepository.findOne({
+  async getReservationById(reservationId: string): Promise<ReservationEntity | undefined> {
+    const reservation = await this.reservationRepository.findOne({
       where: { id: reservationId },
+      relations: ['user', 'room'],
+    });
+
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with ID ${reservationId} not found.`);
+    }
+
+    return reservation;
+  }
+
+  async getAllReservationsByUserId(userId: string): Promise<ReservationEntity[]> {
+    return await this.reservationRepository.find({
+      where: { user: { id: userId } },
       relations: ['user', 'room'],
     });
   }

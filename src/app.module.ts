@@ -6,10 +6,12 @@ import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { DbService } from './database/db.service';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [configuration],
       isGlobal: true,
     }),
     DatabaseModule,

@@ -17,7 +17,7 @@ export class UserController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'User found', type: UserEntity })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('id') userId: number): Promise<UserEntity | undefined> {
+  async getUserById(@Param('id') userId: string): Promise<UserEntity | undefined> {
     return await this.userService.getUserById(userId);
   }
 }

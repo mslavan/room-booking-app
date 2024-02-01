@@ -15,7 +15,7 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async getUserById(userId: number): Promise<UserEntity | undefined> {
+  async getUserById(userId: string): Promise<UserEntity | undefined> {
     return await this.userRepository.findOne({ where: { id: userId } });
   }
 

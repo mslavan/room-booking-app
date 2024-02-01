@@ -4,9 +4,9 @@ import { ReservationEntity } from '../reservation/reservation.entity';
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
-  id: number;
+  id: string;
 
   @Column()
   @ApiProperty()

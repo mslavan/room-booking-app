@@ -8,7 +8,7 @@ export class CreateReservationDto {
   endTime: Date;
 
   @ApiProperty({ description: 'ID of the room for the reservation' })
-  roomId: number;
+  roomId: string;
 
   @ApiProperty({ description: 'Full name for the reservation' })
   fullName: string;
