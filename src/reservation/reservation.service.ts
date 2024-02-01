@@ -58,4 +58,24 @@ export class ReservationService {
       relations: ['user', 'room'],
     });
   }
+
+  async cancelReservation(userId: string, reservationId: string): Promise<void> {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new BadRequestException(`User with ID ${userId} not found.`);
+    }
+
+    const reservation = await this.reservationRepository.findOne({
+      where: { id: reservationId, user },
+      relations: ['user', 'room'],
+    });
+
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with ID ${reservationId} not found.`);
+    }
+
+    reservation.status = 'canceled';
+
+    await this.reservationRepository.save(reservation);
+  }
 }

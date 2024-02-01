@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Delete } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ReservationEntity } from './reservation.entity';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
@@ -39,5 +39,16 @@ export class ReservationController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async getAllReservationsByUserId(@Param('userId') userId: string): Promise<ReservationEntity[]> {
     return await this.reservationService.getAllReservationsByUserId(userId);
+  }
+
+  @Delete('users/:userId/reservations:id/cancel')
+  @ApiResponse({ status: 200, description: 'Reservation successfully canceled' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Reservation not found' })
+  async cancelReservation(
+    @Param('userId') userId: string,
+    @Param('id') reservationId: string
+  ): Promise<void> {
+    await this.reservationService.cancelReservation(userId, reservationId);
   }
 }
