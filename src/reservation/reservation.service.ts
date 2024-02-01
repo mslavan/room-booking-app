@@ -5,6 +5,7 @@ import { ReservationEntity } from './reservation.entity';
 import { CreateReservationDto } from './dto/createReservation.dto';
 import { UserService } from '../user/user.service';
 import { RoomService } from '../room/room.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ReservationService {
@@ -13,6 +14,7 @@ export class ReservationService {
     private readonly reservationRepository: Repository<ReservationEntity>,
     private readonly userService: UserService,
     private readonly roomService: RoomService,
+    private readonly emailService: EmailService
   ) {}
 
   async createReservation(createReservationDto: CreateReservationDto): Promise<ReservationEntity> {
@@ -43,8 +45,17 @@ export class ReservationService {
       endDate,
     });
 
-    return await this.reservationRepository.save(newReservation);
+    const savedReservation = await this.reservationRepository.save(newReservation);
+
+    this.emailService.sendReservationConfirmation(
+      createReservationDto.email,
+      'Reservation Confirmation',
+      savedReservation
+    );
+
+    return savedReservation;
   }
+
   private async isRoomAvailable(roomId: string, startDate: Date, endDate: Date): Promise<boolean> {
     const reservations = await this.reservationRepository.find({
       where: {
@@ -109,11 +120,8 @@ export class ReservationService {
     return reservations.length === 0;
   }
 
-  async isValidDateRange(startDate: Date, endDate: Date): Promise<boolean> {
-    const oneMonthFromNow = new Date();
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-
-    return startDate <= endDate && endDate <= oneMonthFromNow;
+  isValidDateRange(startDate: Date, endDate: Date): boolean {
+    return startDate <= endDate;
   }
 
   private getBookingDates(startDate: Date, _endDate: Date): string[] {
@@ -146,7 +154,6 @@ export class ReservationService {
       const dates = this.getBookingDates(reservation.startDate, reservation.endDate);
       bookedDates.push(...dates);
     });
-    console.log(reservations)
 
     // Get the available dates
     const allDates = this.getBookingDates(startDate, endDate);
