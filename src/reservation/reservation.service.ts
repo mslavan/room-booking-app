@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { ReservationEntity } from './reservation.entity';
 import { CreateReservationDto } from './dto/createReservation.dto';
 import { UserService } from '../user/user.service';
@@ -16,7 +16,7 @@ export class ReservationService {
   ) {}
 
   async createReservation(createReservationDto: CreateReservationDto): Promise<ReservationEntity> {
-    const { email, roomId, ...reservationData } = createReservationDto;
+    const { email, roomId, startDate, endDate, ...reservationData } = createReservationDto;
 
     let user = await this.userService.findByEmail(email);
 
@@ -24,19 +24,37 @@ export class ReservationService {
       user = await this.userService.createUser({ email });
     }
 
-    try {
-      await this.roomService.getRoomById(roomId);
-    } catch (error) {
+    const room = await this.roomService.getRoomById(roomId);
+
+    if (!room) {
       throw new BadRequestException(`Room with ID ${roomId} not found.`);
+    }
+
+    // Check room availability for the entire period
+    if (!(await this.isRoomAvailable(roomId, startDate, endDate))) {
+      throw new BadRequestException(`Room with ID ${roomId} is not available during the specified period.`);
     }
 
     const newReservation = this.reservationRepository.create({
       ...reservationData,
       user,
       room: { id: roomId },
+      startDate,
+      endDate,
     });
 
     return await this.reservationRepository.save(newReservation);
+  }
+  private async isRoomAvailable(roomId: string, startDate: Date, endDate: Date): Promise<boolean> {
+    const reservations = await this.reservationRepository.find({
+      where: {
+        room: { id: roomId },
+        startDate: LessThanOrEqual(endDate),
+        endDate: MoreThanOrEqual(startDate),
+      },
+    });
+
+    return reservations.length === 0;
   }
 
   async getReservationById(reservationId: string): Promise<ReservationEntity | undefined> {
@@ -78,4 +96,64 @@ export class ReservationService {
 
     await this.reservationRepository.save(reservation);
   }
+
+  async isRoomAvailableInPeriod(roomId: string, startDate: Date, endDate: Date): Promise<boolean> {
+    const reservations = await this.reservationRepository.find({
+      where: {
+        room: { id: roomId },
+        startDate: LessThanOrEqual(endDate),
+        endDate: MoreThanOrEqual(startDate),
+      },
+    });
+
+    return reservations.length === 0;
+  }
+
+  async isValidDateRange(startDate: Date, endDate: Date): Promise<boolean> {
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+
+    return startDate <= endDate && endDate <= oneMonthFromNow;
+  }
+
+  private getBookingDates(startDate: Date, _endDate: Date): string[] {
+    const bookingDates: string[] = [];
+    let currentDate = new Date(startDate);
+    const endDate = new Date(_endDate);
+
+
+    while (currentDate <= endDate) {
+      const formattedDate = currentDate.toLocaleDateString('en-GB');
+      bookingDates.push(formattedDate);
+      currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+    }
+
+    return bookingDates;
+  }
+
+  async getAvailableDays(roomId: string, startDate: Date, endDate: Date): Promise<string[]> {
+    const reservations = await this.reservationRepository.find({
+      where: {
+        room: { id: roomId },
+        startDate: LessThanOrEqual(endDate),
+        endDate: MoreThanOrEqual(startDate),
+      },
+    });
+
+    // Get the booked dates
+    const bookedDates: string[] = [];
+    reservations.forEach((reservation) => {
+      const dates = this.getBookingDates(reservation.startDate, reservation.endDate);
+      bookedDates.push(...dates);
+    });
+    console.log(reservations)
+
+    // Get the available dates
+    const allDates = this.getBookingDates(startDate, endDate);
+    const availableDates = allDates.filter((date) => !bookedDates.includes(date));
+
+    return availableDates;
+  }
+
+
 }

@@ -20,7 +20,9 @@ import configuration from './config/configuration';
     ReservationModule,
     CommandModule,
   ],
-  providers: [DbService],
+  providers: [
+    DbService
+  ],
   exports: [DbService],
 
 })

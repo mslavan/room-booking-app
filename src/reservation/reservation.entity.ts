@@ -13,13 +13,13 @@ export class ReservationEntity {
   @ApiProperty()
   status: string;
 
-  @Column({ name: 'start_time' })
+  @Column({ type: 'date', name: 'start_date' })
   @ApiProperty()
-  startTime: Date;
+  startDate: Date;
 
-  @Column({ name: 'end_time' })
+  @Column({ type: 'date', name: 'end_date' })
   @ApiProperty()
-  endTime: Date;
+  endDate: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.reservations)
   @JoinColumn({ name: 'user_id' })
