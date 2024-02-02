@@ -72,6 +72,34 @@ This is a simple room booking application that allows users to book rooms withou
 - The API endpoints are documented using Swagger.
 - Access the Swagger documentation by navigating to `http://localhost:3000/api-docs` after starting the application.
 
+## To-Do List
+
+1. **Cover Unit Tests for Services/Controllers:**
+   - Write comprehensive unit tests to ensure the reliability of services and controllers.
+
+2. **Add Caching Mechanism for Room Availability:**
+   - Implement a caching mechanism to enhance performance.
+   - Update the cache whenever a reservation is made or canceled.
+
+3. **Prepare Migrations for Existing Models:**
+   - Create database migrations to manage changes in the database schema.
+   - Ensure smooth updates to the database as the application evolves.
+
+4. **Add Database Diagram:**
+   - Create a visual representation of the database schema to provide an overview of relationships between entities.
+
+5. **Add Indexes (At Scale):**
+   - Optimize database performance by adding appropriate indexes, considering scalability.
+
+6. **Add Pagination:**
+   - Implement pagination for large sets of data to enhance user experience and reduce resource consumption.
+
+7. **Implement Authorization:**
+   - Enhance security by implementing an authorization mechanism.
+   - Restrict certain actions to authenticated and authorized users.
+
+
+
 ## Contributing
 
 If you would like to contribute to the development of this application, please follow the [contribution guidelines](CONTRIBUTING.md).
